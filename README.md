@@ -129,16 +129,42 @@ I would recommend using Linux but not for the input validation issue presented p
 
 > A: Based upon your Creative or Standard project goals and objectives and your understanding of drivers (e.g., the UVC driver and camera systems) used with embedded Linux on your Raspberry Pi, evaluate the services you expect to run in real-time first or any core with 2 or more real-time services. Then, once implemented, plan your runtime verification analysis including methods to test with tracing and profiling to determine how well your design should work for predictable response. Describe specific requirements for your design in this proposal in good detail (e.g., Si, Ti, Di, Ci and  functionality of each service, how they share data, what core it runs on, etc. to meet your project objective – Standard or Creative).
 
-TODO: - No real work, handled in C
+Handled in C
 
 > B: You will complete this effort in Lab Exercise #6, making this an extended lab exercise, and ultimately you will be graded using the standard rubric or creative rubric. Either way, you must submit a final report with Lab Exercise #6 as outlined here, but at this point, you are asked simply to propose your solution at this point. You may find the “Final Project” videos on various design options helpful as you come up with your proposal (along with Coursera Lightboard videos).
 
-TODO: - No real work, handled in C
+Handled in C
 
 > C: Your Group should submit a proposal that outlines your response to the requirements, your design concept and methods of modeling and implementation analysis (Cheddar and tracing on Linux). This should include some research with citations (at least 3) or papers read, key methods to be used (from book references), and what you read and consulted.
 
-TODO: (30 pts)
+- Requirements
+  - Image requirements
+    - Images must be taken from the camera in its native YUYV format
+    - Images must be saved in either RGB (PPM) or Grayscale (PGM) formats when written to flash
+    - Saved images must not be blurry, duplicated, missed, or otherwise corrupted
+  - 1Hz Analog Clock Requirements
+    - Program must save images of analog clock at 1Hz with its seconds hand not in motion
+    - A total of 1801 images must be captured fulfilling all image requirements.  This is a runtime of 00:30:01
+    - Images must represent a unique second hand position on the analog clock without any blurring present
+    - All images must be saved with a sequence number in the file name and a timestamp in the header
+    - Frame capturing must occur in a dedicated service
+    - Frame processing and detection must occur in a dedicated service on the same CPU core as the frame capturing service
+    - Frame saving to flash must occur in a dedicated best effort service on a separate CPU core from the other two services
+  - 10Hz Digital Clock Requirements
+    - Program must save images of digital clock at 10Hz capturing each 1/10 second update of the digital clock
+    - A total of 1801 images must be captured fulfilling all image requirements.  This is a runtime of 00:03:00.1
+    - Images must represent a unique 1/10th second on the digital clock without any blurring present on the minute, second, or 1/10th second of the clock
+    - All images must be saved with a sequence number in the file name and a timestamp in the header
+    - Frame capturing must occur in a dedicated service
+    - Frame processing and detection must occur in a dedicated service on the same CPU core as the frame capturing service
+    - Frame saving to flash must occur in a dedicated best effort service on a separate CPU core from the other two services
+
+**General Design:**
+
+I will be utilizing a signal-based sequencer running at a frequency resonant with both of the high priority services so that it can release the threads as accurately as possible.  This sequencer will use a linux timer and a signal for calling the sequencer.  This sequencer will run until all frames have been saved to flash and a stop flag has been raised.  The required behavior of the 1Hz and 10Hz program will be selectable via command line input when running the same program.  Rate-monotonic analysis will be performed using Cheddar to validate the feasibility of the software system running on the two cores.  The `SCHED_FIFO` RT scheduling policy will be used to use standard static priority rate monotonic scheduling.  For tracing the timing of the services running in the program, `syslog` will be utilized for outputting timestamps to the logs for retrieval and further timing analysis.
+
+TODO:
 
 > D: Each individual should turn in a paragraph on their role in the project and an outline of what they intend to contribute (specific feature, design, documentation, testing, analysis, coding, drivers, debugging, etc.) and team schedule. For groups of 2 or 3, it is paramount that you specify individual roles and contributions. For those of you working alone, just provide a basic outline of your schedule to complete the project.
 
-TODO: (20 pts)
+I will be completing this project alone.  It is due on August 3, 2025.  This is 18 days for me to complete the entire project and writeup as well as record all of my demos.  Given that I have a deadline for work this week I most likely will not be starting until Saturday, July 19, 2025.  This will give me a total of 15 days to complete the project.  I will use the first 5 days to complete my static analysis and generate my processing flow charts for the writeup.  This will include finalizing service requirements, creating flow charts for my various processing services, and completing the introduction section of the official writeup.  The second 5 days will be used for development of the program based off my design completed in the first 5 days.  This will be spent implementing the design and validating the performance of the program.  The final 5 days will be used analyzing the performance of the program and completing the writeup of the project before recording my final videos and submitting the assignment.
