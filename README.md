@@ -109,19 +109,19 @@ The best part of this issue is that two navigators actually noticed that the alt
 
 > A: Provide a summary of key findings by Gregory Slabodkin as reported in GCN (https://gcn.com/1998/07/software-glitches-leave-navy-smart-ship-dead-inthewater/290995/)
 
-TODO:
+Within Slabodkin's article he explains the September 1997 incident where the USS Yorktown experienced a mass software fault of its Smart Ship technology leading to it losing propulsion making it essentially "dead in the water".  The root cause of the incident was an operator writing a "0" into an input field within the database management system which triggered a divide by zero error leading to a buffer overflow.  This overflow caused the entire system to go down entirely instead of just being located to the one device the error occurred on.  This issue was caused by improper input validation, improper training, and vulnerabilities in their software robustness.  This also raised flags of whether Windows NT was the correct tool for the job when something like Unix was readily available.
 
 > B: Can you find any papers written by other authors that disagree with the key findings of “Gregory Slabodkin as reported in GCN” story above? If so, what are the alternate key findings?
 
-TODO:
+[Wikipedia](https://en.wikipedia.org/wiki/USS_Yorktown_%28CG-48%29) states that a civilian Naval engineer stated that the outage was much worse than reported by the navy with the Yorktown requiring a tow back into port with a multiple day fix once there.  Atlantic fleet officials claimed that this was one of many "LAN casualties" that occurred on this ship.  The civilian engineer also went as far as saying "Using Windows NT, which is known to have some failure modes, on a warship is similar to hoping that luck will be in our favor".
 
 > C: Based on your understanding, describe what you believe to be the root cause of the fatal and near fatal accidents involving this machine and whether the root cause at all involves the operator interface.
 
-TODO:
+I believe that the root cause of this error is two different sets of errors.  I believe that the first issue was improper input validation.  In no way should data that is input by a human user be capable of crashing not just the current system but the entire LAN environment it is in.  This leads to the second issue of how nearly every computer on the LAN went down as well during this failure mode.  If you are running distributed systems like this, they need to be stateless and unreliant on the other nodes.  This seems to have been exemplified by the use of Windows NT which was a consumer grade OS being used on a warship.
 
 > D: Do you believe that upgrade of the Aegis systems to RedHawk Linux (https://concurrentrt.com/products/software/redhawk-linux/) or another variety of realtime Linux would help reduce operational anomalies and defects compared to adaptation of Windows or use of a traditional RTOS or Cyclic Executive? Please give at least 2 reasons why or why you would or would not recommend Linux.
 
-TODO:
+I would recommend using Linux but not for the input validation issue presented previously.  Input validation needs to be handled properly regardless of system and it was a failure on the Navy for allowing user input to create a database crash via divide by zero errors.  The true issue lies in how all of the other computers on the network went down as well which could have been due to using Windows NT.  I believe that using Linux, which was used more for the navy's usecase and had realtime options, would have helped the Yorktown prevent these errors by imposing more consistent realtime constraints and by providing robustness to the "LAN casualties" observed since it was designed for just that type of job.
 
 ## Problem 4
 
