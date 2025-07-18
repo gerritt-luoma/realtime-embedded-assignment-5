@@ -163,7 +163,13 @@ Handled in C
 
 I will be utilizing a signal-based sequencer running at a frequency resonant with both of the high priority services so that it can release the threads as accurately as possible.  This sequencer will use a linux timer and a signal for calling the sequencer.  This sequencer will run until all frames have been saved to flash and a stop flag has been raised.  The required behavior of the 1Hz and 10Hz program will be selectable via command line input when running the same program.  Rate-monotonic analysis will be performed using Cheddar to validate the feasibility of the software system running on the two cores.  The `SCHED_FIFO` RT scheduling policy will be used to use standard static priority rate monotonic scheduling.  For tracing the timing of the services running in the program, `syslog` will be utilized for outputting timestamps to the logs for retrieval and further timing analysis.
 
-TODO:
+**Analysis and Verification**
+
+I will be using general analysis of the program by using the Liu and Layland paper for calculating the LUB of my services.  Aside from writing to flash, I believe my program will be able to easily achieve the requirements of 1Hz and 10Hz processing while remaining under the LUB for two services.  I will need to generate the service periods, computation time, etc. to verify the total CPU usage is below the LUB to guarantee it is schedulable.
+
+I will also utilize the Cheddar program to ensure that the two systems are schedulable and verifiable.  Once again, will need to determine the deadline, WCET, period, etc.  This will allow me to graphically analyze the system and visually inspect when the various services will complete.
+
+The final analysis that I will utilize is post-run analyzation.  By extracting the timestamps from my syslogs, I will be able to calculate the average, minimum, and maximum computation times to validate against the expected period/deadline to verify there were no missed deadlines and to calculate the jitter of the program.
 
 > D: Each individual should turn in a paragraph on their role in the project and an outline of what they intend to contribute (specific feature, design, documentation, testing, analysis, coding, drivers, debugging, etc.) and team schedule. For groups of 2 or 3, it is paramount that you specify individual roles and contributions. For those of you working alone, just provide a basic outline of your schedule to complete the project.
 
